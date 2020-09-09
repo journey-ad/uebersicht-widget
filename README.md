@@ -1,6 +1,6 @@
-# uebersicht-plugin
+# uebersicht-widget
 
-我用的一些 [Übersicht](https://github.com/felixhageloh/uebersicht) 插件
+我用的一些 [Übersicht](https://github.com/felixhageloh/uebersicht) 小部件
 
 ## 预览
 
