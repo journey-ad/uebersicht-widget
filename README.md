@@ -1,3 +1,5 @@
+<p align="center"><img src="https://count.getloli.com/get/@uebersicht-widget.github" alt="uebersicht-widget"></p>
+
 # uebersicht-widget
 
 我用的一些 [Übersicht](https://github.com/felixhageloh/uebersicht) 小部件
