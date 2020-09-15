@@ -67,6 +67,7 @@ export const render = props => props.error ? props.error :
 		className={css`
 			display: flex;
 			flex-wrap: wrap;
+			justify-content: space-around;
 			align-items: center;
 			width: 370px;
 			height: 178px;
