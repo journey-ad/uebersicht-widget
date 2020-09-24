@@ -30,11 +30,13 @@ export const className = `
 
 	.block-0 {
 		font: 5px "DejaVu Sans Mono", Menlo, "Lucida Sans Typewriter", "Lucida Console", monaco, "Bitstream Vera Sans Mono", monospace;
+		width: 45%;
 	}
 
 	.block-1 {
 		font: 12px "DejaVu Sans Mono", Menlo, "Lucida Sans Typewriter", "Lucida Console", monaco, "Bitstream Vera Sans Mono", monospace;
 		margin: -20px 0 0 0;
+		width: 55%;
 	}
 
 	.block-2 {
