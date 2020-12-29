@@ -119,9 +119,10 @@ export const command = dispatch => {
       return dispatch({ type: 'FETCH_FAILED', error: error })
     })
     .then(data => {
+      const illusts = data.illusts.filter(illust => illust.type !== 'manga')
       return dispatch({
         type: 'FETCH_SUCCEDED',
-        data: data.illusts
+        data: illusts
       })
     })
 }
