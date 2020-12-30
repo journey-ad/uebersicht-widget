@@ -109,7 +109,7 @@ export const command = dispatch => {
   const proxy = 'http://127.0.0.1:41417'
   const date = new Date()
   date.setDate(date.getDate() - 2)
-  const server = 'https://api.obfs.dev/pixiv/'
+  const server = 'https://hibiapi.getloli.com/pixiv/'
   const path = `?type=rank&mode=${modeMap[config.mode].key}&date=${utils.dateFmt(date, 'yyyy-MM-dd')}`
   fetch(`${proxy}/${server}${path}`)
     .then(response => {
