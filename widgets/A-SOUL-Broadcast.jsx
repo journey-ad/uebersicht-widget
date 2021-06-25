@@ -211,7 +211,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
         <div className={wrapper}>
           <div className={header}>
             <h3 className={title}>
-              A-Soul 动态广播
+              A-SOUL 动态广播
               <span>每 {config.refresh} 分钟刷新</span>
             </h3>
           </div>

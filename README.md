@@ -14,3 +14,4 @@
 - [PixivDaily](widgets/PixivDaily.jsx): Pixiv 排行榜
 - [wttr.widget](widgets/wttr.widget): 天气预报、月相
 - [BiliBangumi](widgets/BiliBangumi.jsx): Bilibili 新番时间线
+- [A-SOUL-Broadcast](widgets/A-SOUL-Broadcast.jsx): A-SOUL 动态广播
