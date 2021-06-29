@@ -95,6 +95,8 @@ let fontColor
 let fontSubColor
 let backgroundColor
 
+let last_dynamic_id = 0
+
 if (config.theme.default === 'auto') {
   let media = window.matchMedia('(prefers-color-scheme: dark)')
   if (media.matches)
@@ -167,12 +169,15 @@ export const command = dispatch => {
         256: "发布了新音频"
       }
       const msg = msgList[0]
-      const { card } = msg
-      const info = {
-        title: `@${msg.uname} ${type_msg[msg.type]}`,
-        desc: card.title || card.item.content || card.item.desc || card.item.description
+      const { dynamic_id, card } = msg
+      if (dynamic_id !== last_dynamic_id) {
+        last_dynamic_id = dynamic_id
+        const info = {
+          title: `@${msg.uname} ${type_msg[msg.type]}`,
+          desc: card.title || card.item.content || card.item.desc || card.item.description
+        }
+        run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
       }
-      run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
 
       return dispatch({
         type: 'FETCH_SUCCEDED',
