@@ -1,4 +1,4 @@
-import { css } from 'uebersicht'
+import { run, css } from 'uebersicht'
 
 /*********************** Start 插件配置 ***********************/
 /*********************** 下面是自定义区 ***********************/
@@ -153,16 +153,26 @@ export const command = dispatch => {
         })
         msgList = msgList.concat(list)
       })
-      // 0: "发布了新动态",
-      // 1: "转发了一条动态",
-      // 8: "发布了新投稿",
-      // 16: "发布了短视频",
-      // 64: "发布了新专栏",
-      // 256: "发布了新音频"
       msgList = msgList
         // .filter(_ => ![1].includes(_.type))
         .sort((a, b) => b.timestamp - a.timestamp)
       // console.log(msgList)
+
+      const type_msg = {
+        0: "发布了新动态",
+        1: "转发了一条动态",
+        8: "发布了新投稿",
+        16: "发布了短视频",
+        64: "发布了新专栏",
+        256: "发布了新音频"
+      }
+      const msg = msgList[0]
+      const { card } = msg
+      const info = {
+        title: `@${msg.uname} ${type_msg[msg.type]}`,
+        desc: card.title || card.item.content || card.item.desc || card.item.description
+      }
+      run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
 
       return dispatch({
         type: 'FETCH_SUCCEDED',
@@ -318,14 +328,13 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                           </div>
                           <p className={pubIndex}
                           >
-                            <a
+                            <span
                               className={css`
                                 color: ${fontColor};
                               `}
-                              href={`${item.pub_ts <= now ? `https://www.bilibili.com/bangumi/play/ep${item.ep_id}` : 'javascript:void(0);'}`}
                             >
                               {utils.dateFmt(item.timestamp, 'yyyy-MM-dd hh:mm:ss')}
-                            </a>
+                            </span>
                           </p>
                         </div>
                       </div>
