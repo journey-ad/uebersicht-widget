@@ -18,7 +18,7 @@ const config = {
       backgroundColor: `rgba(0, 0, 0, 0.85)` // 深色主题背景颜色及透明度
     },
   },
-  refresh: 2,
+  refresh: 1,
   POSITION: {
     x: 'left', // 显示在桌面左边还是右边，left代表左，right代表右
     y: 'top', // 显示在桌面顶部还是底部，top代表顶部，bottom代表底部
@@ -160,23 +160,30 @@ export const command = dispatch => {
         .sort((a, b) => b.timestamp - a.timestamp)
       // console.log(msgList)
 
-      const type_msg = {
-        0: "发布了新动态",
-        1: "转发了一条动态",
-        8: "发布了新投稿",
-        16: "发布了短视频",
-        64: "发布了新专栏",
-        256: "发布了新音频"
-      }
-      const msg = msgList[0]
-      const { dynamic_id, card } = msg
-      if (dynamic_id !== last_dynamic_id) {
-        last_dynamic_id = dynamic_id
-        const info = {
-          title: `@${msg.uname} ${type_msg[msg.type]}`,
-          desc: card.title || card.item.content || card.item.desc || card.item.description
+      // 使用一个只在 主显示器生效的组件 设置的 全局变量 区分主副显示器
+      if (window.uniqueInstanceHelper) {
+        const type_msg = {
+          0: "发布了新动态",
+          1: "转发了一条动态",
+          2: "发布了新动态",
+          4: "发布了新动态",
+          8: "发布了新投稿",
+          16: "发布了短视频",
+          64: "发布了新专栏",
+          256: "发布了新音频"
         }
-        run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
+        const msg = msgList[0]
+        if (now - msg.timestamp < 60 * 2) {
+          const { dynamic_id, card } = msg
+          if (dynamic_id !== last_dynamic_id) {
+            last_dynamic_id = dynamic_id
+            const info = {
+              title: `@${msg.uname} ${type_msg[msg.type]}`,
+              desc: card.title || card.item.content || card.item.desc || card.item.description
+            }
+            run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
+          }
+        }
       }
 
       return dispatch({
@@ -227,7 +234,13 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
           <div className={header}>
             <h3 className={title}>
               A-SOUL 动态广播
-              <span>每 {config.refresh} 分钟刷新</span>
+              {
+                config.refresh > 1 ? (
+                  <span>每 {config.refresh} 分钟刷新</span>
+                ) : (
+                  <span>每分钟刷新</span>
+                )
+              }
             </h3>
           </div>
           {
