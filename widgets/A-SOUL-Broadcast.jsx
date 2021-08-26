@@ -279,12 +279,13 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                             {
                               (() => {
                                 if (item.type === 1) {
-                                  const origin = JSON.parse(card.origin)
-                                  return (
-                                    <div>
-                                      <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                        {card.item.content || card.item.description}
-                                        <div className={css`
+                                  if (card.origin) {
+                                    const origin = JSON.parse(card.origin)
+                                    return (
+                                      <div>
+                                        <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
+                                          {card.item.content || card.item.description}
+                                          <div className={css`
                                           display: flex;
                                           align-items: center;
                                           margin-top: 4px;
@@ -292,23 +293,44 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                           padding: 6px 6px;
                                           border-radius: 6px;
                                         `}>
-                                          <img
-                                            className={cover_s}
-                                            src={
-                                              origin.pic || origin.face ||
-                                              origin.user.face || origin.user.head_url
-                                            }
-                                          />
-                                          <span className={metaOrigin}>
-                                            {
-                                              origin.title || origin.content || origin.desc || origin.description ||
-                                              origin.item.title || origin.item.content || origin.item.description
-                                            }
-                                          </span>
-                                        </div>
-                                      </a>
-                                    </div>
-                                  )
+                                            <img
+                                              className={cover_s}
+                                              src={
+                                                origin.pic || origin.face ||
+                                                origin.user.face || origin.user.head_url
+                                              }
+                                            />
+                                            <span className={metaOrigin}>
+                                              {
+                                                origin.title || origin.content || origin.desc || origin.description ||
+                                                origin.item.title || origin.item.content || origin.item.description
+                                              }
+                                            </span>
+                                          </div>
+                                        </a>
+                                      </div>
+                                    )
+                                  } else {
+                                    return (
+                                      <div>
+                                        <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
+                                          {card.item.content || card.item.description}
+                                          <div className={css`
+                                          display: flex;
+                                          align-items: center;
+                                          margin-top: 4px;
+                                          background: ${backgroundColor};
+                                          padding: 6px 6px;
+                                          border-radius: 6px;
+                                        `}>
+                                            <span className={metaOrigin}>
+                                              {card.item.tips}
+                                            </span>
+                                          </div>
+                                        </a>
+                                      </div>
+                                    )
+                                  }
                                 }
                                 else if ([2, 4].includes(item.type)) {
                                   return (
