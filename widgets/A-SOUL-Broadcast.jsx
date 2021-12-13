@@ -179,7 +179,7 @@ export const command = dispatch => {
             last_dynamic_id = dynamic_id
             const info = {
               title: `@${msg.uname} ${type_msg[msg.type]}`,
-              desc: card.title || card.item.content || card.item.desc || card.item.description
+              desc: card.title || card?.item?.content || card?.item?.desc || card?.item?.description
             }
             run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
           }
@@ -237,9 +237,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
               {
                 config.refresh > 1 ? (
                   <span>每 {config.refresh} 分钟刷新</span>
-                ) : (
-                  <span>每分钟刷新</span>
-                )
+                ) : ''
               }
             </h3>
           </div>
@@ -284,7 +282,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     return (
                                       <div>
                                         <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                          {card.item.content || card.item.description}
+                                          <span className={textContent}>{card?.item?.content || card?.item?.description}</span>
                                           <div className={css`
                                           display: flex;
                                           align-items: center;
@@ -297,13 +295,14 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                               className={cover_s}
                                               src={
                                                 origin.pic || origin.face ||
-                                                origin.user.face || origin.user.head_url
+                                                origin?.user?.face || origin?.user?.head_url ||
+                                                origin?.author?.face || origin?.author?.head_url
                                               }
                                             />
                                             <span className={metaOrigin}>
                                               {
                                                 origin.title || origin.content || origin.desc || origin.description ||
-                                                origin.item.title || origin.item.content || origin.item.description
+                                                origin?.item?.title || origin?.item?.content || origin?.item?.description
                                               }
                                             </span>
                                           </div>
@@ -314,7 +313,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     return (
                                       <div>
                                         <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                          {card.item.content || card.item.description}
+                                          {card?.item?.content || card?.item?.description}
                                           <div className={css`
                                           display: flex;
                                           align-items: center;
@@ -324,7 +323,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                           border-radius: 6px;
                                         `}>
                                             <span className={metaOrigin}>
-                                              {card.item.tips}
+                                              {card?.item?.tips}
                                             </span>
                                           </div>
                                         </a>
@@ -335,8 +334,8 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                 else if ([2, 4].includes(item.type)) {
                                   return (
                                     <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                      {card.item.content || card.item.description}
-                                      {card.item.pictures ? ' ' + Array(card.item.pictures.length).fill('[图片]').join('') : ''}
+                                      <span className={textContent}>{card?.item?.content || card?.item?.description}</span>
+                                      {card?.item?.pictures ? ' ' + Array(card.item.pictures.length).fill('[图片]').join('') : ''}
                                     </a>
                                   )
                                 }
@@ -370,7 +369,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                           >
                             <span
                               className={css`
-                                color: ${fontColor};
+                                color: ${fontSubColor};
                               `}
                             >
                               {utils.dateFmt(item.timestamp, 'yyyy-MM-dd hh:mm:ss')}
@@ -409,11 +408,11 @@ const errorWrapper = css`
 
 const wrapper = css`
   font-family: Montserrat, sans-serif;
-  width: 320px;
-  height: 260px;
+  width: 330px;
+  height: 269px;
   opacity: calc(${config.theme.opacity} / 100);
   background-color: ${backgroundColor};
-  padding: 24px 24px 15px 24px;
+  padding: 16px 20px 14px 20px;
   border-radius: 10px;
   color: ${fontColor};
 
@@ -425,7 +424,7 @@ const wrapper = css`
 `
 
 const header = css`
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 `
 
 const title = css`
@@ -460,7 +459,7 @@ const list = css`
 position: absolute;
 overflow-y: auto;
 width: 334px;
-height: 230px;
+height: 235px;
 padding-right: 4px;
 
 &::-webkit-scrollbar {
@@ -525,17 +524,21 @@ display: -webkit-box;
 `
 
 const pubTitle = css`
-font-size: 13px;
+font-size: 12px;
 line-height: 1.3;
 margin: 0;
 
 a {
   color: ${fontColor};
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
 }
+`
+
+const textContent = css`
+overflow: hidden;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 5;
+word-break: break-all;
 `
 
 const pubIndex = css`
