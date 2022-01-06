@@ -281,8 +281,8 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     const origin = JSON.parse(card.origin)
                                     return (
                                       <div>
-                                        <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                          <span className={textContent}>{card?.item?.content || card?.item?.description}</span>
+                                        <a className={textContent} href={`https://t.bilibili.com/${item.dynamic_id}`}>
+                                          <span>{card?.item?.content || card?.item?.description}</span>
                                           <div className={css`
                                           display: flex;
                                           align-items: center;
@@ -333,8 +333,8 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                 }
                                 else if ([2, 4].includes(item.type)) {
                                   return (
-                                    <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                      <span className={textContent}>{card?.item?.content || card?.item?.description}</span>
+                                    <a className={textContent} href={`https://t.bilibili.com/${item.dynamic_id}`}>
+                                      <span>{card?.item?.content || card?.item?.description}</span>
                                       {card?.item?.pictures ? ' ' + Array(card.item.pictures.length).fill('[图片]').join('') : ''}
                                     </a>
                                   )
