@@ -19,4 +19,4 @@
 
 ## 关于
 
-壁纸图片 - [枝江往事](https://store.steampowered.com/app/1641270/)游戏CG
+壁纸图片 - [风  夏日  王贝拉](https://t.bilibili.com/683328914776391766)
