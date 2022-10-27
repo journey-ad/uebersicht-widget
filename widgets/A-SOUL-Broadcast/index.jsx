@@ -39,6 +39,26 @@ const uidList = Object.values({
   'Eileen': 672342685,
 })
 
+let emoteMap = {}
+run(`cat A-SOUL-Broadcast/emote_map.json`)
+  .then((data) => {
+    emoteMap = JSON.parse(data)
+  })
+
+const parseEmote = (text) => {
+  const reg = new RegExp(/[\[【](.*?)[\]】]/g)
+  return text.replace(reg, (match, key) => {
+    key = `[${key}]`
+
+    if (emoteMap[key]) {
+      const url = emoteMap[key]?.replace("http://", "https://");
+      return `<img class="${emote}" src="${url}" title="${key}">`
+    }
+
+    return match;
+  });
+};
+
 const fetchUserDynamics = uid => {
   return new Promise((resolve, reject) => {
     const proxy = 'http://127.0.0.1:41417/'
@@ -281,8 +301,10 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     const origin = JSON.parse(card.origin)
                                     return (
                                       <div>
-                                        <a className={textContent} href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                          <span>{card?.item?.content || card?.item?.description}</span>
+                                        <a href={`https://t.bilibili.com/${item.dynamic_id}`}>
+                                          <span className={textContent}
+                                            dangerouslySetInnerHTML={{ __html: parseEmote(card?.item?.content || card?.item?.description) }}
+                                          ></span>
                                           <div className={css`
                                           display: flex;
                                           align-items: center;
@@ -299,12 +321,11 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                                 origin?.author?.face || origin?.author?.head_url
                                               }
                                             />
-                                            <span className={metaOrigin}>
-                                              {
-                                                origin.title || origin.content || origin.desc || origin.description ||
-                                                origin?.item?.title || origin?.item?.content || origin?.item?.description
-                                              }
-                                            </span>
+                                            <span className={metaOrigin}
+                                              dangerouslySetInnerHTML={{
+                                                __html: parseEmote(origin.title || origin.content || origin.desc || origin.description ||
+                                                  origin?.item?.title || origin?.item?.content || origin?.item?.description)
+                                              }}></span>
                                           </div>
                                         </a>
                                       </div>
@@ -334,7 +355,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                 else if ([2, 4].includes(item.type)) {
                                   return (
                                     <a className={textContent} href={`https://t.bilibili.com/${item.dynamic_id}`}>
-                                      <span>{card?.item?.content || card?.item?.description}</span>
+                                      <span dangerouslySetInnerHTML={{ __html: parseEmote(card?.item?.content || card?.item?.description) }}></span>
                                       {card?.item?.pictures ? ' ' + Array(card.item.pictures.length).fill('[图片]').join('') : ''}
                                     </a>
                                   )
@@ -539,6 +560,13 @@ display: -webkit-box;
 -webkit-box-orient: vertical;
 -webkit-line-clamp: 5;
 word-break: break-all;
+`
+
+const emote = css`
+display: inline-block;
+width: 2em;
+height: 2em;
+margin: 0 .05em;
 `
 
 const pubIndex = css`
