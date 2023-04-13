@@ -562,13 +562,6 @@ display: -webkit-box;
 word-break: break-all;
 `
 
-const emote = css`
-display: inline-block;
-width: 2em;
-height: 2em;
-margin: 0 .05em;
-`
-
 const pubIndex = css`
 margin: 0;
 margin-top: 4px;
@@ -589,4 +582,11 @@ background-size: 24px 18px;
 background-repeat: no-repeat;
 background-position: 0 -2px;
 padding-left: 22px;
+`
+
+const emote = css`
+display: inline-block;
+width: 2em;
+height: 2em;
+margin: 0 .05em;
 `
