@@ -108,6 +108,14 @@ const utils = {
       }
     }
     return format;
+  },
+  notification({ title, message, url, icon }) {
+    run(`ret=$(./A-SOUL-Broadcast/alerter -title '${title}' -message '${message}' -contentImage '${icon}' -timeout 5)
+    if [[ $ret == '@CONTENTCLICKED' ]] || [[ $ret == '@ACTIONCLICKED' ]]; then
+        open '${url}'
+    fi`)
+
+    // run(`osascript -e 'display notification "${desc}" with title "${title}"'`)
   }
 }
 
@@ -197,11 +205,15 @@ export const command = dispatch => {
           const { dynamic_id, card } = msg
           if (dynamic_id !== last_dynamic_id) {
             last_dynamic_id = dynamic_id
+
             const info = {
               title: `@${msg.uname} ${type_msg[msg.type]}`,
-              desc: card.title || card?.item?.content || card?.item?.desc || card?.item?.description
+              message: card.title || card?.item?.content || card?.item?.desc || card?.item?.description,
+              url: `https://t.bilibili.com/${dynamic_id}`,
+              icon: msg.face
             }
-            run(`osascript -e 'display notification "${info.desc}" with title "${info.title}"'`)
+
+            utils.notification(info)
           }
         }
       }
@@ -538,6 +550,7 @@ font-size: 10px;
 line-height: 1.2;
 color: ${fontColor};
 margin-left: .2em;
+word-break: break-all;
 overflow: hidden;
 display: -webkit-box;
 -webkit-box-orient: vertical;
