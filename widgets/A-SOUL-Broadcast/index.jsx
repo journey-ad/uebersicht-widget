@@ -75,6 +75,10 @@ const fetchUserDynamics = uid => {
   })
 }
 
+// init alerter icon
+run(`cd ./A-SOUL-Broadcast/lib && ./fileicon set ./alerter ./icon.png`)
+  .then(ret => console.log(ret))
+
 let now = Date.now() / 1000 | 0
 
 const utils = {
@@ -110,7 +114,7 @@ const utils = {
     return format;
   },
   notification({ title, message, url, icon }) {
-    run(`ret=$(./A-SOUL-Broadcast/alerter -title '${title}' -message '${message}' -contentImage '${icon}' -timeout 5)
+    run(`ret=$(./A-SOUL-Broadcast/lib/alerter -title '${title}' -message '${message}' -contentImage '${icon}')
     if [[ $ret == '@CONTENTCLICKED' ]] || [[ $ret == '@ACTIONCLICKED' ]]; then
         open '${url}'
     fi`)
@@ -308,7 +312,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                           >
                             {
                               (() => {
-                                if (item.type === 1) {
+                                if (item.type === 1) { // 转发动态
                                   if (card.origin) {
                                     const origin = JSON.parse(card.origin)
                                     return (
@@ -364,7 +368,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     )
                                   }
                                 }
-                                else if ([2, 4].includes(item.type)) {
+                                else if ([2, 4].includes(item.type)) { // 图文动态
                                   return (
                                     <a className={textContent} href={`https://t.bilibili.com/${item.dynamic_id}`}>
                                       <span dangerouslySetInnerHTML={{ __html: parseEmote(card?.item?.content || card?.item?.description) }}></span>
@@ -372,7 +376,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     </a>
                                   )
                                 }
-                                else if (item.type === 8) {
+                                else if (item.type === 8) { // 视频投稿
                                   return (
                                     <a className={iconVideo}
                                       href={card.short_link}>
@@ -380,7 +384,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     </a>
                                   )
                                 }
-                                else if (item.type === 64) {
+                                else if (item.type === 64) { // 专栏投稿
                                   return (
                                     <a className={iconArticle}
                                       href={`https://www.bilibili.com/read/cv${card.id}`}>
@@ -388,7 +392,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                                     </a>
                                   )
                                 }
-                                else {
+                                else { // 其他
                                   return (
                                     <span>
                                       {card.title}
