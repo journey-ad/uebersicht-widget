@@ -75,10 +75,6 @@ const fetchUserDynamics = uid => {
   })
 }
 
-// init alerter icon
-run(`cd ./A-SOUL-Broadcast/lib && ./fileicon set ./alerter ./icon.png`)
-  .then(ret => console.log(ret))
-
 let now = Date.now() / 1000 | 0
 
 const utils = {
@@ -114,10 +110,7 @@ const utils = {
     return format;
   },
   notification({ title, message, url, icon }) {
-    run(`ret=$(./A-SOUL-Broadcast/lib/alerter -title '${title}' -message '${message}' -contentImage '${icon}')
-    if [[ $ret == '@CONTENTCLICKED' ]] || [[ $ret == '@ACTIONCLICKED' ]]; then
-        open '${url}'
-    fi`)
+    run(`open -a A-SOUL.app --args -title '${title}' -message '${message}' -contentImage '${icon}' -open '${url}'`)
 
     // run(`osascript -e 'display notification "${desc}" with title "${title}"'`)
   }
