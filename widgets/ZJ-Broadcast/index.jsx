@@ -75,10 +75,9 @@ const parseEmote = (text) => {
 
 const fetchUserDynamics = uid => {
   return new Promise((resolve, reject) => {
-    const proxy = 'http://127.0.0.1:41417/'
-    fetch(`${proxy}https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=${uid}&offset_dynamic_id=0&need_top=0`)
+    run(`curl -sS "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=${uid}&offset_dynamic_id=0&need_top=0"`)
       .then(response => {
-        return response.json()
+        return JSON.parse(response)
       })
       .catch(error => {
         reject(error)
@@ -191,10 +190,17 @@ export const command = dispatch => {
         // const _list = cards.slice(0, 5)
 
         const list = cards.map(item => {
-          const { desc, card: raw } = item
+          const { desc, card: raw, display } = item
           const { dynamic_id_str: dynamic_id, type, timestamp, user_profile } = desc
           const { uid, uname, face } = user_profile.info
           const card = JSON.parse(raw)
+          let reserve = display?.add_on_card_info?.[0]
+
+          // 直播预约
+          if (reserve && reserve.add_on_card_show_type === 6) {
+            const { title, reserve_total: total, livePlanStartTime: timestamp } = reserve.reserve_attach_card
+            reserve = { title, total, timestamp }
+          } else reserve = null
 
           return {
             dynamic_id,
@@ -203,7 +209,8 @@ export const command = dispatch => {
             uname,
             face,
             card,
-            timestamp
+            timestamp,
+            reserve,
           }
         })
         msgList = msgList.concat(list)
@@ -332,7 +339,7 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                 <div className={list}>
                   {data.map((item, i) => {
                     // console.log(item)
-                    const { card } = item
+                    const { card, reserve } = item
                     return (
                       <div
                         key={i}
@@ -450,8 +457,18 @@ export const render = ({ loading, data, refresh, error }, dispatch) => {
                               })()
                             }
                           </div>
-                          <p className={pubIndex}
-                          >
+                          {
+                            reserve ? (
+                              <div className={reserveBox}>
+                                <p className="title">{reserve.title}</p>
+                                <p className="meta">
+                                  <span className={iconClock}>{utils.dateFmt(reserve.timestamp, 'MM-dd hh:mm')}</span>
+                                  <span className="total">{reserve.total}人预约</span>
+                                </p>
+                              </div>
+                            ) : ''
+                          }
+                          <p className={pubIndex}>
                             <span>
                               {utils.dateFmt(item.timestamp, 'yyyy-MM-dd hh:mm:ss')}
                             </span>
@@ -682,6 +699,30 @@ display: -webkit-box;
 word-break: break-all;
 `
 
+const reserveBox = css`
+margin-top: 4px;
+padding: 4px 6px;
+border-radius: 6px;
+background: ${backgroundColor};
+font-size: 12px;
+line-height: 1.2;
+color: ${fontColor};
+p {
+  margin: 0;
+}
+.title {
+  opacity: .9;
+}
+.meta {
+  margin-top: 4px;
+  font-size: 10px;
+  color: ${fontSubColor};
+  .total {
+    margin-left: 4px;
+  }
+}
+`
+
 const pubIndex = css`
 display: flex;
 justify-content: space-between;
@@ -716,11 +757,19 @@ padding-left: 22px;
 `
 
 const iconMenu = css`
-  width: 16px;
-  height: 16px;
-  background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cpath d='M128 768h768v-85.333H128V768zm0-213.333h768v-85.334H128v85.334zM128 256v85.333h768V256H128z' fill='%23515151'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
+width: 16px;
+height: 16px;
+background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cpath d='M128 768h768v-85.333H128V768zm0-213.333h768v-85.334H128v85.334zM128 256v85.333h768V256H128z' fill='%23515151'/%3E%3C/svg%3E");
+background-size: contain;
+background-repeat: no-repeat;
+`
+
+const iconClock = css`
+background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M512 16C238 16 16 238 16 512s222 496 496 496 496-222 496-496S786 16 512 16zm0 896c-221 0-400-179-400-400s179-400 400-400 400 179 400 400-179 400-400 400zm123.6-208.8L465.8 579.8c-6.2-4.6-9.8-11.8-9.8-19.4V232c0-13.2 10.8-24 24-24h64c13.2 0 24 10.8 24 24v283.4l133.6 97.2c10.8 7.8 13 22.8 5.2 33.6L669.2 698c-7.8 10.6-22.8 13-33.6 5.2z' fill='%23515151'/%3E%3C/svg%3E");
+background-size: 10px 10px;
+background-repeat: no-repeat;
+background-position: left center;
+padding-left: 12px;
 `
 
 const emote = css`
