@@ -1,4 +1,5 @@
 import { run, css } from 'uebersicht'
+import { cookie } from './config.json'
 
 /*********************** Start 插件配置 ***********************/
 /*********************** 下面是自定义区 ***********************/
@@ -75,7 +76,7 @@ const parseEmote = (text) => {
 
 const fetchUserDynamics = uid => {
   return new Promise((resolve, reject) => {
-    run(`curl -sS "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=${uid}&offset_dynamic_id=0&need_top=0"`)
+    run(`curl -sS "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?host_uid=${uid}&offset_dynamic_id=0&need_top=0" -H "Cookie: ${cookie}"`)
       .then(response => {
         return JSON.parse(response)
       })
