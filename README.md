@@ -16,6 +16,7 @@
 - [wttr.widget](widgets/wttr.widget): 天气预报、月相
 - [BiliBangumi](widgets/BiliBangumi.jsx): Bilibili 新番时间线
 - [A-SOUL-Broadcast](widgets/A-SOUL-Broadcast.jsx): A-SOUL 动态广播
+- [ZJ-Broadcast](widgets/ZJ-Broadcast.jsx): 更全面、支持选组的动态广播
 
 ## 关于
 

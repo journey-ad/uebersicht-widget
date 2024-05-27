@@ -1,5 +1,5 @@
 import { run, css } from 'uebersicht'
-import { cookie } from './config.json'
+import { cookie, defaultType } from './config.json'
 
 /*********************** Start 插件配置 ***********************/
 /*********************** 下面是自定义区 ***********************/
@@ -48,10 +48,15 @@ const uidMap = {
     '枝江娱乐官方': 3493085336046382,
     'A-SOUL_Official': 703007996,
     '枝江娱乐的小黑': 3493082517474232
+  }),
+  '李滇滇': Object.values({
+    '李滇滇': 3546676667091128
   })
 }
 
-let curType = Object.keys(uidMap)[0]
+const curMonitorID = location.pathname.split('/')[1]
+
+let curType = defaultType[curMonitorID] || Object.keys(uidMap)[0]
 let isTypeMenuShow = false
 
 let emoteMap = {}
@@ -133,8 +138,10 @@ const utils = {
 
       case '闪耀舞台':
       case '枝江羊驼':
-      default:
         app = '枝江娱乐.app'
+        break
+      default:
+        app = '动态更新.app'
         break
     }
 

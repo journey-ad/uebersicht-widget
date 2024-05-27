@@ -1,3 +1,6 @@
 {
-  "cookie": "SESSDATA="
+  "cookie": "SESSDATA=",
+  "defaultType": {
+    "123456": "A-SOUL"
+  }
 }
