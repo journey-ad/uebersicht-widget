@@ -3,12 +3,10 @@ import { css } from 'uebersicht'
 //
 // Shows the current wttr.in forecast on your desktop
 //
-//
-//Change language and city with the two parameter below.
-//check http://wttr.in/:translation for a list of available languanges.
-//
-//
 
+// Change language and city with the two parameters below.
+// Check http://wttr.in/:translation for a list of available languages.
+//
 export const lang = "zh";
 export const city = "ShangHai";
 
@@ -48,21 +46,22 @@ export const className = `
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
 `;
 
 export const command = `
   cd wttr.widget &&
+  ARCH=$(uname -m) &&
+  BINARY="./terminal-to-html" &&
+  if [ "$ARCH" = "arm64" ]; then BINARY="./terminal-to-html-arm64"; fi &&
   curl -s wttr.in/moon?lang=${lang} |
-  ./terminal-to-html&&
+  $BINARY &&
   echo "__BLOCK__" &&
   curl -s ${lang}.wttr.in/${city}\?0tq |
-  ./terminal-to-html&&
+  $BINARY &&
   echo "__BLOCK__" &&
   curl -sL https://v1.hitokoto.cn/?encode=text |
-  ./terminal-to-html
+  $BINARY
 `;
-
 
 export const render = props => props.error ? props.error :
   <div
